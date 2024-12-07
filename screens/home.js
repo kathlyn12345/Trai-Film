@@ -17,6 +17,7 @@ import Recommendation from "../components/genre/recommendation";
 import Action from "../components/genre/action";
 import Horror from "../components/genre/horror";
 import Fantasy from "../components/genre/fantasy";
+import Thriller from "../components/genre/thriller";
 import Drama from "../components/genre/drama";
 import Sidebar from "../components/sidebar";
 
@@ -88,6 +89,7 @@ const HomeScreen = () => {
               <Action />
               <Horror />
               <Fantasy />
+              <Thriller />
               <Drama />
             </>
           )}

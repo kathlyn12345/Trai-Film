@@ -258,8 +258,8 @@ const styles = StyleSheet.create({
   },
 
   videoPlayer: {
-    width: "100%",
-    height: 200,
+    width: "110%",
+    height: 205,
     borderRadius: 10,
   },
 
@@ -274,13 +274,15 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: "#FFFFFF",
     marginTop: 10,
+    textAlign: "left",
+    width: "100%",
   },
 
   modalDescription: {
     color: "#CCCCCC",
     fontSize: 16,
     marginTop: 10,
-    textAlign: "center",
+    textAlign: "left",
   },
 
   arrowButton: {
@@ -288,6 +290,7 @@ const styles = StyleSheet.create({
     top: 10,
     left: 10,
     padding: 10,
+    zIndex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 50,
   },

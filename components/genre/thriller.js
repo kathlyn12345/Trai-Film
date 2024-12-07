@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
-  ToastAndroid,
+  ToastAndroid, // For showing toast messages
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
@@ -17,8 +17,8 @@ import { Video } from "expo-av";
 import { getDatabase, ref, onValue, off } from "firebase/database";
 import { useCustomFonts } from "../font";
 
-const Horror = () => {
-  const [horror, setHorror] = useState([]);
+const Thriller = () => {
+  const [thriller, setThriller] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [currentTitle, setCurrentTitle] = useState("");
@@ -26,24 +26,23 @@ const Horror = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [playPauseState, setPlayPauseState] = useState(true);
   const videoRef = useRef(null);
-
   const fontsLoaded = useCustomFonts();
 
   useEffect(() => {
-    const fetchHorror = async () => {
+    const fetchThriller = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "horror"));
-        const fetchHorror = querySnapshot.docs.map((doc) => ({
+        const querySnapshot = await getDocs(collection(db, "thriller"));
+        const fetchedThriller = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setHorror(fetchHorror);
+        setThriller(fetchedThriller);
       } catch (error) {
-        console.error("Error fetching horror:", error);
+        console.error("Error fetching thriller:", error);
       }
     };
 
-    fetchHorror();
+    fetchThriller();
   }, []);
 
   useEffect(() => {
@@ -109,11 +108,11 @@ const Horror = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Horror</Text>
+      <Text style={styles.title}>Thriller</Text>
 
       <ScrollView horizontal>
-        {horror.length > 0 ? (
-          horror.map((item) => (
+        {thriller.length > 0 ? (
+          thriller.map((item) => (
             <TouchableOpacity
               key={item.id}
               style={styles.card}
@@ -133,7 +132,7 @@ const Horror = () => {
           ))
         ) : (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No Horror available</Text>
+            <Text style={styles.emptyText}>No thriller trailers available</Text>
           </View>
         )}
       </ScrollView>
@@ -218,7 +217,7 @@ const styles = StyleSheet.create({
   },
 
   modalContent: {
-    width: "95%",
+    width: "90%",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     padding: 10,
     borderRadius: 10,
@@ -227,8 +226,8 @@ const styles = StyleSheet.create({
   },
 
   videoPlayer: {
-    width: "110%",
-    height: 205,
+    width: "105%",
+    height: 200,
     borderRadius: 10,
   },
 
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    zIndex: 2,
+    zIndex: 1,
     padding: 10,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 50,
@@ -293,4 +292,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Horror;
+export default Thriller;

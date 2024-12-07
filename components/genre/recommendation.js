@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
-  ToastAndroid, // For showing toast messages
+  ToastAndroid,
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
@@ -29,7 +29,6 @@ const Recommendation = () => {
 
   const fontsLoaded = useCustomFonts();
 
-  // Fetch recommendation data from Firestore
   useEffect(() => {
     const fetchRecommendation = async () => {
       try {
@@ -38,11 +37,6 @@ const Recommendation = () => {
           id: doc.id,
           ...doc.data(),
         }));
-
-        if (fetchedRecommendation.length === 0) {
-          console.log("No data found in the recommendation collection.");
-        }
-
         setRecommendation(fetchedRecommendation);
       } catch (error) {
         console.error("Error fetching recommendation:", error);
@@ -84,7 +78,6 @@ const Recommendation = () => {
       setModalVisible(true);
       setIsLoading(true);
 
-      // Start the video when modal opens
       if (videoRef.current) {
         videoRef.current.playAsync();
       }
@@ -97,7 +90,7 @@ const Recommendation = () => {
     setCurrentTitle("");
     setCurrentDescription("");
     if (videoRef.current) {
-      videoRef.current.pauseAsync(); // Pause when modal closes
+      videoRef.current.pauseAsync();
     }
   };
 
