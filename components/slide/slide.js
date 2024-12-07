@@ -9,12 +9,14 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  ToastAndroid, // For showing toast messages
 } from "react-native";
 import { db } from "../../firebase/firebaseconfig";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Dot from "./dot";
 import { Video } from "expo-av";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { getDatabase, ref, onValue, off } from "firebase/database";
 
 const SlideShow = () => {
   const [slides, setSlides] = useState([]);
@@ -26,7 +28,39 @@ const SlideShow = () => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentDescription, setCurrentDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [playPauseState, setPlayPauseState] = useState(true); // Default: Playing
+  const videoRef = useRef(null); // Video reference
 
+  // Firebase Realtime Database Listener for Play/Pause
+  useEffect(() => {
+    const database = getDatabase();
+    const playPauseRef = ref(database, "/test/");
+
+    const listener = onValue(playPauseRef, (snapshot) => {
+      const playPauseState = snapshot.val();
+
+      if (playPauseState === 1) {
+        setPlayPauseState(true);
+        if (videoRef.current) {
+          videoRef.current.playAsync();
+          ToastAndroid.show("Video is resumed", ToastAndroid.SHORT);
+        }
+      } else if (playPauseState === 0) {
+        setPlayPauseState(false);
+        if (videoRef.current) {
+          videoRef.current.pauseAsync();
+          ToastAndroid.show("Video is paused", ToastAndroid.SHORT);
+        }
+      }
+    });
+
+    return () => {
+      off(playPauseRef, "value", listener); // Correct cleanup
+    };
+  }, []);
+
+  // Fetch slides from Firestore
   useEffect(() => {
     const fetchSlides = async () => {
       try {
@@ -53,6 +87,12 @@ const SlideShow = () => {
       setCurrentTitle(title);
       setCurrentDescription(description);
       setModalVisible(true);
+      setIsLoading(true);
+
+      // Start the video when modal opens
+      if (videoRef.current) {
+        videoRef.current.playAsync();
+      }
     }
   };
 
@@ -61,6 +101,9 @@ const SlideShow = () => {
     setCurrentVideoUrl("");
     setCurrentTitle("");
     setCurrentDescription("");
+    if (videoRef.current) {
+      videoRef.current.pauseAsync(); // Pause when modal closes
+    }
   };
 
   const handleFullScreen = (status) => {
@@ -106,22 +149,24 @@ const SlideShow = () => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <ActivityIndicator size="large" color="#FF9500" style={styles.loader} />
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#FF9500" style={styles.loader} />
-      ) : (
-        <FlatList
-          data={slides}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          renderItem={renderSlide}
-          ref={flatListRef}
-          onScroll={handleScroll}
-        />
-      )}
+      <FlatList
+        data={slides}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderSlide}
+        ref={flatListRef}
+        onScroll={handleScroll}
+      />
 
       <Dot slides={slides} currentIndex={currentIndex} />
 
@@ -140,13 +185,22 @@ const SlideShow = () => {
               <Icon name="arrow-left" size={19} color="#FFFFFF" />
             </TouchableOpacity>
             <Video
+              ref={videoRef}
               source={{ uri: currentVideoUrl }}
               style={styles.videoPlayer}
               useNativeControls={true}
               resizeMode="cover"
-              shouldPlay={true}
-              onFullscreenUpdate={handleFullScreen}
+              onError={(error) => console.error("Video error:", error)}
+              onLoadStart={() => setIsLoading(true)}
+              onLoad={() => setIsLoading(false)}
             />
+            {isLoading && (
+              <ActivityIndicator
+                size="large"
+                color="#FFFFFF"
+                style={styles.videoLoader}
+              />
+            )}
             <Text style={styles.modalTitle}>{currentTitle}</Text>
             <Text style={styles.modalDescription}>{currentDescription}</Text>
           </View>
@@ -158,84 +212,81 @@ const SlideShow = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
+    flex: 1,
+    padding: 10,
   },
 
   slideContainer: {
-    position: "relative",
-    width: 360,
-    height: 210,
+    width: 370,
+    height: 230,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginRight: 5,
   },
 
   slide: {
     width: "100%",
     height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
   },
 
   loader: {
-    marginTop: 20,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.80)",
-    position: "relative",
+    backgroundColor: "rgba(0, 0, 0, 0.95)",
   },
 
   modalBackdrop: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.80)",
-    zIndex: -1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
   },
 
   modalContent: {
-    width: "100%",
-    height: "50%",
+    width: "90%",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
-    justifyContent: "center",
     alignItems: "center",
   },
 
   videoPlayer: {
-    width: "105%",
-    height: "60%",
-    marginBottom: 90,
+    width: "100%",
+    height: 200,
+    borderRadius: 10,
+  },
+
+  videoLoader: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -15 }, { translateY: -15 }],
   },
 
   modalTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
-    bottom: 75,
+    fontSize: 22,
     color: "#FFFFFF",
-    textAlign: "left",
-    width: "100%",
+    marginTop: 10,
   },
 
   modalDescription: {
-    fontSize: 15,
-    marginTop: -70,
     color: "#CCCCCC",
-    textAlign: "left",
-    width: "105%",
-    paddingHorizontal: 10,
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: "center",
   },
 
   arrowButton: {
     position: "absolute",
-    top: 0,
+    top: 10,
     left: 10,
-    zIndex: 1,
     padding: 10,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     borderRadius: 50,

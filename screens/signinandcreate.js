@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 524,
-    height: 524,
+    width: 580,
+    height: 580,
     resizeMode: "contain",
-    marginRight: 70,
     bottom: 60,
+    marginRight: 70,
     transform: [{ rotate: "-40deg" }],
     zIndex: 1,
   },

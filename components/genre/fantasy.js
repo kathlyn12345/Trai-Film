@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
-  ToastAndroid, // For showing toast messages
+  ToastAndroid,
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
@@ -17,57 +17,55 @@ import { Video } from "expo-av";
 import { useCustomFonts } from "../font";
 import { getDatabase, ref, onValue, off } from "firebase/database";
 
-const Drama = () => {
-  const [drama, setDrama] = useState([]);
+const Fantasy = () => {
+  const [fantasy, setFantasy] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentDescription, setCurrentDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [playPauseState, setPlayPauseState] = useState(true); // Default: Playing
-  const videoRef = useRef(null); // Video reference
+  const [playPauseState, setPlayPauseState] = useState(true);
+  const videoRef = useRef(null);
   const fontsLoaded = useCustomFonts();
 
-  // Fetch drama data from Firestore
   useEffect(() => {
-    const fetchDrama = async () => {
+    const fetchFantasy = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "drama"));
-        const fetchedDrama = querySnapshot.docs.map((doc) => ({
+        const querySnapshot = await getDocs(collection(db, "fantasy"));
+        const fetchedFantasy = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setDrama(fetchedDrama);
+        setFantasy(fetchedFantasy);
       } catch (error) {
-        console.error("Error fetching drama:", error);
+        console.error("Error fetching fantasy:", error);
       }
     };
 
-    fetchDrama();
+    fetchFantasy();
   }, []);
 
   // Firebase Realtime Database Listener
   useEffect(() => {
     const database = getDatabase();
-    const playPauseRef = ref(database, "/test/true"); // Adjusted to your structure
+    const playPauseRef = ref(database, "/test/true"); 
 
     const listener = onValue(playPauseRef, (snapshot) => {
-      const isPlaying = snapshot.val() === 1; // Play if value is 1
+      const isPlaying = snapshot.val() === 1; 
       setPlayPauseState(isPlaying);
 
       if (videoRef.current) {
         if (isPlaying) {
-          videoRef.current.playAsync(); // Play video
-          ToastAndroid.show("Video is resumed", ToastAndroid.SHORT); // Show resume message
+          videoRef.current.playAsync(); 
+          ToastAndroid.show("Video is resumed", ToastAndroid.SHORT); 
         } else {
-          videoRef.current.pauseAsync(); // Pause video
-          ToastAndroid.show("Video is paused", ToastAndroid.SHORT); // Show pause message
+          videoRef.current.pauseAsync(); 
+          ToastAndroid.show("Video is paused", ToastAndroid.SHORT); 
         }
       }
     });
 
     return () => {
-      // Cleanup the listener
       off(playPauseRef, "value", listener);
     };
   }, []);
@@ -78,11 +76,9 @@ const Drama = () => {
       setCurrentTitle(title);
       setCurrentDescription(description);
       setModalVisible(true);
-      setIsLoading(true); // Show loading spinner when video is about to load
-
-      // Start the video when modal opens
+      setIsLoading(true);
       if (videoRef.current && playPauseState) {
-        videoRef.current.playAsync(); // Play immediately if state is set to play
+        videoRef.current.playAsync();
       }
     }
   };
@@ -93,7 +89,7 @@ const Drama = () => {
     setCurrentTitle("");
     setCurrentDescription("");
     if (videoRef.current) {
-      videoRef.current.pauseAsync(); // Pause when modal closes
+      videoRef.current.pauseAsync();
     }
   };
 
@@ -112,11 +108,11 @@ const Drama = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Drama</Text>
+      <Text style={styles.title}>Fantasy</Text>
 
       <ScrollView horizontal>
-        {drama.length > 0 ? (
-          drama.map((item) => (
+        {fantasy.length > 0 ? (
+          fantasy.map((item) => (
             <TouchableOpacity
               key={item.id}
               style={styles.card}
@@ -136,7 +132,7 @@ const Drama = () => {
           ))
         ) : (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No drama available</Text>
+            <Text style={styles.emptyText}>No Fantasy available</Text>
           </View>
         )}
       </ScrollView>
@@ -221,7 +217,7 @@ const styles = StyleSheet.create({
   },
 
   modalContent: {
-    width: "95%",
+    width: "90%",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     padding: 10,
     borderRadius: 10,
@@ -230,8 +226,8 @@ const styles = StyleSheet.create({
   },
 
   videoPlayer: {
-    width: "110%",
-    height: 205,
+    width: "105%",
+    height: 200,
     borderRadius: 10,
   },
 
@@ -296,4 +292,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Drama;
+export default Fantasy;

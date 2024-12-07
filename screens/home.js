@@ -15,6 +15,8 @@ import { Video } from "expo-av";
 import SlideShow from "../components/slide/slide";
 import Recommendation from "../components/genre/recommendation";
 import Action from "../components/genre/action";
+import Horror from "../components/genre/horror";
+import Fantasy from "../components/genre/fantasy";
 import Drama from "../components/genre/drama";
 import Sidebar from "../components/sidebar";
 
@@ -84,6 +86,8 @@ const HomeScreen = () => {
               <SlideShow slides={slides} onSlidePress={handleSlidePress} />
               <Recommendation />
               <Action />
+              <Horror />
+              <Fantasy />
               <Drama />
             </>
           )}

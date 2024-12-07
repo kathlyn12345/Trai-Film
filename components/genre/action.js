@@ -69,7 +69,7 @@ const Action = () => {
 
     return () => {
       // Cleanup the listener
-      playPauseRef.off();
+      off(playPauseRef, "value", listener);
     };
   }, []);
 
@@ -116,24 +116,30 @@ const Action = () => {
       <Text style={styles.title}>Action</Text>
 
       <ScrollView horizontal>
-        {action.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.card}
-            onPress={() =>
-              handleSlidePress(item.videoUrl, item.title, item.description)
-            }
-          >
-            <Image source={{ uri: item.imageUrl }} style={styles.image} />
-            <Text
-              style={styles.cardTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+        {action.length > 0 ? (
+          action.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.card}
+              onPress={() =>
+                handleSlidePress(item.videoUrl, item.title, item.description)
+              }
             >
-              {item.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Image source={{ uri: item.imageUrl }} style={styles.image} />
+              <Text
+                style={styles.cardTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {item.title}
+              </Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No Action available</Text>
+          </View>
+        )}
       </ScrollView>
 
       <Modal
@@ -155,7 +161,7 @@ const Action = () => {
               source={{ uri: currentVideoUrl }}
               style={styles.videoPlayer}
               useNativeControls={true}
-              resizeMode="cover"
+              resizeMode="contain"
               onError={handleVideoError}
               onLoadStart={() => setIsLoading(true)}
               onLoad={() => setIsLoading(false)}
@@ -217,7 +223,7 @@ const styles = StyleSheet.create({
   },
 
   modalContent: {
-    width: "90%",
+    width: "95%",
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     padding: 10,
     borderRadius: 10,
@@ -226,8 +232,8 @@ const styles = StyleSheet.create({
   },
 
   videoPlayer: {
-    width: "105%",
-    height: 200,
+    width: "110%",
+    height: 205,
     borderRadius: 10,
   },
 
