@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView, StatusBar } from "react-native";
 import SplashScreen from "./screens/splash";
 import SigninandCreate from "./screens/signinandcreate";
+import HomeScreen from "./screens/home";
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -22,6 +23,12 @@ export default function App() {
           <Stack.Screen
             name="SigninandCreate"
             component={SigninandCreate}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
