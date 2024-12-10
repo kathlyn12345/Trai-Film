@@ -48,7 +48,7 @@ const Fantasy = () => {
   // Firebase Realtime Database Listener
   useEffect(() => {
     const database = getDatabase();
-    const playPauseRef = ref(database, "/test/true"); 
+    const playPauseRef = ref(database, "/test/"); 
 
     const listener = onValue(playPauseRef, (snapshot) => {
       const isPlaying = snapshot.val() === 1; 

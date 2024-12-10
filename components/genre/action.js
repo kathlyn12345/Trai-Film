@@ -50,7 +50,7 @@ const Action = () => {
   // Firebase Realtime Database Listener
   useEffect(() => {
     const database = getDatabase();
-    const playPauseRef = ref(database, "/test/true"); // Adjusted to your structure
+    const playPauseRef = ref(database, "/test/"); // Adjusted to your structure
 
     const listener = onValue(playPauseRef, (snapshot) => {
       const isPlaying = snapshot.val() === 1; // Play if value is 1

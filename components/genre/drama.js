@@ -8,7 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
-  ToastAndroid, // For showing toast messages
+  ToastAndroid, 
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
@@ -24,11 +24,10 @@ const Drama = () => {
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentDescription, setCurrentDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [playPauseState, setPlayPauseState] = useState(true); // Default: Playing
-  const videoRef = useRef(null); // Video reference
+  const [playPauseState, setPlayPauseState] = useState(true); 
+  const videoRef = useRef(null); 
   const fontsLoaded = useCustomFonts();
 
-  // Fetch drama data from Firestore
   useEffect(() => {
     const fetchDrama = async () => {
       try {
@@ -46,22 +45,21 @@ const Drama = () => {
     fetchDrama();
   }, []);
 
-  // Firebase Realtime Database Listener
   useEffect(() => {
     const database = getDatabase();
-    const playPauseRef = ref(database, "/test/true"); // Adjusted to your structure
+    const playPauseRef = ref(database, "/test/"); 
 
     const listener = onValue(playPauseRef, (snapshot) => {
-      const isPlaying = snapshot.val() === 1; // Play if value is 1
+      const isPlaying = snapshot.val() === 1; 
       setPlayPauseState(isPlaying);
 
       if (videoRef.current) {
         if (isPlaying) {
-          videoRef.current.playAsync(); // Play video
-          ToastAndroid.show("Video is resumed", ToastAndroid.SHORT); // Show resume message
+          videoRef.current.playAsync(); 
+          ToastAndroid.show("Video is resumed", ToastAndroid.SHORT); 
         } else {
-          videoRef.current.pauseAsync(); // Pause video
-          ToastAndroid.show("Video is paused", ToastAndroid.SHORT); // Show pause message
+          videoRef.current.pauseAsync(); 
+          ToastAndroid.show("Video is paused", ToastAndroid.SHORT); 
         }
       }
     });
@@ -78,11 +76,10 @@ const Drama = () => {
       setCurrentTitle(title);
       setCurrentDescription(description);
       setModalVisible(true);
-      setIsLoading(true); // Show loading spinner when video is about to load
+      setIsLoading(true); 
 
-      // Start the video when modal opens
       if (videoRef.current && playPauseState) {
-        videoRef.current.playAsync(); // Play immediately if state is set to play
+        videoRef.current.playAsync(); 
       }
     }
   };
@@ -93,7 +90,7 @@ const Drama = () => {
     setCurrentTitle("");
     setCurrentDescription("");
     if (videoRef.current) {
-      videoRef.current.pauseAsync(); // Pause when modal closes
+      videoRef.current.pauseAsync(); 
     }
   };
 
