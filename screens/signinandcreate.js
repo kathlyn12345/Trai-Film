@@ -18,14 +18,14 @@ const SigninandCreate = () => {
       <View style={styles.ButtonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("SignIn")}
+          onPress={() => navigation.navigate("signin")}
         >
           <Text style={styles.signin}>Sign In</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.bButton]}
-          onPress={() => navigation.navigate("SignUp")}
+          onPress={() => navigation.navigate("signup")}
         >
           <Text style={styles.Text}>Create an Account</Text>
         </TouchableOpacity>

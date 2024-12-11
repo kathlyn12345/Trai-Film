@@ -145,7 +145,7 @@ const SignIn = () => {
 
       <View style={styles.signup}>
         <Text style={styles.signupText}>Don't have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
           <Text style={styles.signUp}>Sign Up</Text>
         </TouchableOpacity>
       </View>

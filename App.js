@@ -17,15 +17,15 @@ export default function App() {
       <SafeAreaView style={{ flex: 1, backgroundColor: "#000000" }}>
         <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
-        <Stack.Navigator initialRouteName="SplashScreen">
+        <Stack.Navigator initialRouteName="splash">
           <Stack.Screen
-            name="SplashScreen"
+            name="splash"
             component={SplashScreen}
             options={{ headerShown: false }}
           />
 
           <Stack.Screen
-            name="SigninandCreate"
+            name="signinandcreate"
             component={SigninandCreate}
             options={{ headerShown: false }}
           />
@@ -43,13 +43,13 @@ export default function App() {
           />
 
           <Stack.Screen
-            name="SignIn"
+            name="signin"
             component={SignIn}
             options={{ headerShown: false }}
           />
 
           <Stack.Screen
-            name="SignUp"
+            name="signup"
             component={SignUp}
             options={{ headerShown: false }}
           />

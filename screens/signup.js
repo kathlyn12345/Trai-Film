@@ -48,7 +48,7 @@ const SignUp = () => {
       setErrorMessage("");
       await signUpWithEmailPassword(email, password);
       alert("Account created successfully!");
-      navigation.navigate("Signin");
+      navigation.navigate("signin");
     } catch (error) {
       setErrorMessage("Error creating account: " + error.message);
     }
@@ -191,7 +191,7 @@ const SignUp = () => {
 
       <View style={styles.signIn}>
         <Text style={styles.signInText}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+        <TouchableOpacity onPress={() => navigation.navigate("signin")}>
           <Text style={styles.signInLink}>Sign In</Text>
         </TouchableOpacity>
       </View>

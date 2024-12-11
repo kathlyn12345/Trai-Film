@@ -54,7 +54,7 @@ const SplashScreen = ({ navigation }) => {
     }, 1500);
 
     setTimeout(() => {
-      navigation.replace("SigninandCreate");
+      navigation.replace("signinandcreate");
     }, 2800);
   }, [fontsLoaded, navigation]);
 
