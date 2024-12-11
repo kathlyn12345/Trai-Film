@@ -8,7 +8,7 @@ import {
   Text,
   ScrollView,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import SlideShow from "../components/slide/slide";
@@ -19,10 +19,11 @@ import Fantasy from "../components/genre/fantasy";
 import Thriller from "../components/genre/thriller";
 import Drama from "../components/genre/drama";
 import Sidebar from "../components/sidebar";
-import { searchMovies } from "../components/searchService"; 
-import { Video } from "expo-av"; 
+import { searchMovies } from "../components/searchService";
+import { Video } from "expo-av";
 import { query, collection, orderBy, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebaseconfig";
+import { useCustomFonts } from "../components/font";
 
 const HomeScreen = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -31,11 +32,16 @@ const HomeScreen = () => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState("");
   const [currentTitle, setCurrentTitle] = useState("");
   const [currentDescription, setCurrentDescription] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); 
-  const [searchResults, setSearchResults] = useState([]); 
-  const [isSearchVisible, setIsSearchVisible] = useState(false); 
-  const [loading, setLoading] = useState(false); 
-  const [videoLoading, setVideoLoading] = useState(true); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
+  const fontsLoaded = useCustomFonts();
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
 
   const fetchSlides = async () => {
     try {
@@ -56,12 +62,12 @@ const HomeScreen = () => {
   }, []);
 
   const handleSearch = async () => {
-    setLoading(true); 
+    setLoading(true);
     if (searchTerm.length > 0) {
-      const results = await searchMovies(searchTerm); 
+      const results = await searchMovies(searchTerm);
       setSearchResults(results);
     } else {
-      setSearchResults([]); 
+      setSearchResults([]);
     }
     setLoading(false);
   };
@@ -74,7 +80,7 @@ const HomeScreen = () => {
 
     setSearchTerm("");
     setSearchResults([]);
-    setIsSearchVisible(false); 
+    setIsSearchVisible(false);
   };
 
   const handleCloseModal = () => {
@@ -82,11 +88,11 @@ const HomeScreen = () => {
     setCurrentVideoUrl("");
     setCurrentTitle("");
     setCurrentDescription("");
-    setVideoLoading(true); 
+    setVideoLoading(true);
   };
 
   const handleVideoLoad = () => {
-    setVideoLoading(false); 
+    setVideoLoading(false);
   };
 
   const toggleSidebar = () => {
@@ -136,19 +142,18 @@ const HomeScreen = () => {
 
         <View style={styles.content}>
           {loading ? (
-            <ActivityIndicator size="large" color="#FFFFFF" /> 
+            <ActivityIndicator size="large" color="#FFFFFF" />
           ) : searchResults.length > 0 ? (
             <ScrollView>
               {searchResults.map((movie) => (
                 <TouchableOpacity
                   key={movie.id}
-                  onPress={
-                    () =>
-                      handleSlidePress(
-                        movie.videoUrl,
-                        movie.title,
-                        movie.description
-                      ) 
+                  onPress={() =>
+                    handleSlidePress(
+                      movie.videoUrl,
+                      movie.title,
+                      movie.description
+                    )
                   }
                 >
                   <View style={styles.movieCard}>
@@ -308,11 +313,11 @@ const styles = StyleSheet.create({
   },
 
   loader: {
-    position: "absolute", 
-    top: "50%", 
-    left: "50%", 
-    transform: [{ translateX: -25 }, { translateY: -25 }], 
-    zIndex: 1, 
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -25 }, { translateY: -25 }],
+    zIndex: 1,
   },
 
   arrowButton: {

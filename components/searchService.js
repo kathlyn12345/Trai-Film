@@ -2,7 +2,7 @@
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebaseconfig";
 
-const searchMovies = async (searchTerm) => {
+export const searchMovies = async (searchTerm) => {
   try {
     const genres = [
       "action",
@@ -25,7 +25,7 @@ const searchMovies = async (searchTerm) => {
       const querySnapshot = await getDocs(q);
       const results = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        
+
         ...doc.data(),
         genre,
       }));

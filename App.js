@@ -6,6 +6,9 @@ import SplashScreen from "./screens/splash";
 import SigninandCreate from "./screens/signinandcreate";
 import HomeScreen from "./screens/home";
 import AboutUsScreen from "./screens/aboutus";
+import SignIn from "./screens/signin";
+import SignUp from "./screens/signup";
+import ProfileScreen from "./screens/profile";
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -36,6 +39,24 @@ export default function App() {
           <Stack.Screen
             name="AboutUsScreen"
             component={AboutUsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="SignIn"
+            component={SignIn}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

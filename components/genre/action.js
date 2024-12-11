@@ -14,7 +14,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseconfig";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Video } from "expo-av";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, off } from "firebase/database";
 import { useCustomFonts } from "../font";
 
 const Action = () => {
